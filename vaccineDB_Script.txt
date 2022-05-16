@@ -1,0 +1,358 @@
+drop database covidDB;
+create database covidDB;
+use covidDB;
+
+create table Company(
+name varchar(40) not null,
+street varchar(40),
+city varchar(40),
+province char(2),
+postalCode char(6),
+primary key(name)
+);
+
+create table Vaccine(
+productionDate date not null,
+expiryDate date not null,
+doses integer,
+lot char(6) not null primary key,
+producedBy varchar(40) not null,
+foreign key (producedBy) references Company(name)
+);
+
+create table vaccineClinic(
+name varchar(40) not null,
+street varchar(40),
+city varchar(40),
+province char(2),
+postalCode char(6),
+primary key(name)
+);
+
+Create table shipsTo(
+lotNumber char(6) not null,
+clinic char(40) not null,
+primary key(lotNumber, clinic),
+foreign key (lotNumber) references Vaccine(lot) on delete cascade,
+foreign key (clinic) references vaccineClinic(name) on delete cascade
+);
+
+Create table Patient(
+dob date not null,
+OHIP char(20) not null primary key,
+firstName varchar(40) not null,
+lastName varchar(40) not null
+);
+
+Create table Spouse(
+firstName varchar(40) not null,
+lastName varchar(40) not null,
+OHIP char(20) not null primary key,
+phone char(10),
+spouseOHIP char(20) not null,
+foreign key (spouseOHIP) references Patient(OHIP) on delete cascade
+);
+
+Create table Nurse(
+ID char(20) not null primary key,
+firstName varchar(40) not null,
+lastName varchar(40) not null
+);
+
+Create table Practice(
+name char(40) not null primary key,
+phone char(10)
+);
+
+Create table Doctor(
+ID char(20) not null primary key,
+firstName varchar(40) not null,
+lastName varchar(40) not null,
+PracticeName char(40),
+foreign key (PracticeName) references Practice(name) on delete set null
+);
+
+Create table nurseCredentials(
+ID char(20) not null,
+Cred char(4) not null,
+Primary key(ID, Cred),
+Foreign key (ID) references Nurse(id) on delete cascade
+);
+
+Create table drCredentials(
+ID char(20) not null,
+Cred char(4) not null,
+Primary key(ID, Cred),
+Foreign key (ID) references Doctor(id) on delete cascade
+);
+
+Create table NurseWorksAt(
+ID char(20) not null,
+clinicName char(40) not null,
+Primary key(clinicName, ID),
+Foreign key (clinicName) references vaccineClinic(name) on delete cascade,
+Foreign key (ID) references Nurse(ID) on delete cascade
+);
+
+Create table DrWorksAt(
+ID char(20) not null,
+clinicName char(40) not null,
+Primary key(clinicName, ID),
+Foreign key (clinicName) references vaccineClinic(name) on delete cascade,
+Foreign key (ID) references Doctor(ID) on delete cascade
+);
+
+Create table Vaccination(
+patientOHIP char(20) not null,
+vaxClinic char(40) not null,
+vaccineLot char(6) not null,
+date datetime not null,
+primary key(patientOHIP, vaxClinic, vaccineLot),
+foreign key (patientOHIP) references Patient(OHIP) on delete restrict,
+foreign key (vaxClinic) references vaccineClinic(name) on delete restrict,
+foreign key (vaccineLot) references Vaccine(lot) on delete restrict
+);
+
+insert into Company values
+('Astrazeneca','73 Tisdale Ave.','Oakland','AB','J7N2E2'),
+('Pfizer','405 Windsor St.','Ryland','ON','S8L8E5'),
+('Johnson & Johnson','Miginty','91 Scott St.','QC','L6H3E6'),
+('Moderna','876 Watson Rd.','Gerard','BC','H9T8P2')
+;
+
+insert into Vaccine values
+('2020-06-21','2020-07-23',532234,'3847592374', 'Moderna'),
+('2020-11-18','2020-12-18',653452,'5647592374', 'Moderna'),
+('2020-12-27','2021-02-19',843452,'7577592374', 'Moderna'),
+('2020-12-23','2021-02-18',434452,'9837592374', 'Moderna'),
+('2020-11-18','2020-12-18',212452,'9337592374', 'Moderna'),
+('2020-11-19','2020-12-18',1334520,'7217592374', 'Moderna'),
+('2020-11-18','2020-12-12',547890,'5432592374', 'Moderna'),
+('2021-03-13','2020-05-22',573945,'8487592374', 'Moderna'),
+('2020-07-19','2020-08-19',435321,'4947592374', 'Pfizer'),
+('2020-09-15','2020-10-15',872342,'3447592374', 'Pfizer'),
+('2020-09-15','2020-10-15',1395738,'9437592374', 'Pfizer'),
+('2020-09-15','2020-10-15',1839485,'5847392374', 'Pfizer'),
+('2020-09-15','2020-10-15',1732842,'8236592374', 'Pfizer'),
+('2020-09-15','2020-10-15',1938423,'4232592374', 'Pfizer'),
+('2020-09-15','2020-10-15',1211345,'3212592374', 'Pfizer'),
+('2020-09-15','2020-10-15',1736245,'8782592374', 'Pfizer'),
+('2020-04-08','2020-05-08',983768,'2747592374', 'Astrazeneca'),
+('2020-04-08','2020-05-08',748324,'4827592374', 'Astrazeneca'),
+('2020-04-08','2020-05-08',743445,'5437592374', 'Astrazeneca'),
+('2020-04-08','2020-05-08',989854,'2567592374', 'Astrazeneca'),
+('2020-04-08','2020-05-08',857345,'4577592374', 'Astrazeneca'),
+('2020-04-08','2020-05-08',348588,'7347592374', 'Astrazeneca'),
+('2020-04-08','2020-05-08',765774,'7567592374', 'Astrazeneca'),
+('2021-07-15','2021-10-19',62732,'7473958454', 'Johnson & Johnson'),
+('2021-07-15','2021-10-19',127322,'4783958454', 'Johnson & Johnson'),
+('2021-07-15','2021-10-19',94752,'4583958454', 'Johnson & Johnson'),
+('2021-07-15','2021-10-19',85453,'5763958454', 'Johnson & Johnson'),
+('2021-07-15','2021-10-19',54435,'2933958454', 'Johnson & Johnson'),
+('2021-07-15','2021-10-19',59488,'8853958454', 'Johnson & Johnson'),
+('2021-07-15','2021-10-19',76934,'4213958454', 'Johnson & Johnson'),
+('2021-07-15','2021-10-19',83245,'3823958456', 'Johnson & Johnson'),
+('2021-07-15','2021-10-19',78475,'9533958454', 'Johnson & Johnson'),
+('2021-07-15','2021-10-19',45643,'9343958454', 'Johnson & Johnson'),
+('2021-07-15','2021-10-19',98985,'9233958454', 'Johnson & Johnson')
+;
+
+insert into Patient values
+('1976-11-08','7694329','John','Doe'),
+('1989-07-06','2394329','Mary','Lee'),
+('1953-12-25','5894329','Yan','Li'),
+('1999-09-19','3994329','Bob','Barker'),
+('1974-04-13','8394329','Warren','Buffet'),
+('1932-06-21','1794329','Adam','Scott'),
+('2001-07-24','4538976','Bill','Gates'),
+('1949-12-11','6943495','Rory','Porior'),
+('1987-11-01','4968395','Fred','Trent Jr.'),
+('1974-08-28','5993345','Luke','McDonald'),
+('1998-04-23','4453004','Jake','Lemay'),
+('1976-05-29','5929345','Katie','Donald'),
+('1982-12-18','2944583','Sarah','Donell'),
+('1967-07-14','4354200','Christina','Corner')
+;
+
+insert into Spouse values
+('Bob','Watson','5414329','9054325643','7694329'),
+('Joe','Riu','8434329','2674325643','2394329'),
+('Mia','Thompson','8934329','4164325643','5894329'),
+('Leslie','Sanders','2344329','9744325643','3994329'),
+('Creed','Wilson','7654329','9234325643','8394329'),
+('Maggie','Smith','8544329','2154325643','1794329')
+;
+
+insert into vaccineClinic values
+('White Oaks Clinic','Raster St.','Houston','NB','K6F2W4'),
+('Downsview Medical','Rotherglen Ave.','Levalle','QC','L6H3T1'),
+('Stumpin Medical','Morrison Rd.','Muskoka','ON','K9G2W4'),
+('Priority Medical','William St.','Drumland','BC','L9G2W4'),
+('All-Right Clinic','Carry Crt.','Whistler','BC','S2G2W4'),
+('Vally Medical','Devon Rd.','Saltmine','NS','L5H2W4')
+;
+
+insert into Practice values
+('Sunview Clinic',4152072143),
+('Riverview Medical',9632072143),
+('Downsview Clinic',93674072143),
+('Cloud Clinic',9152072143),
+('Sunset Clinic',4522072143),
+('East-Village Medical',5822072143)
+;
+
+insert into Doctor values
+(9594329,'John','McGee','Sunview Clinic'),
+(8294329,'Sean','Dumbo','Riverview Medical'),
+(5194329,'Sierra','Soires','Downsview Clinic'),
+(7294329,'Sam','Murry','Cloud Clinic'),
+(4494329,'Tim','Fitzpatrick','Sunset Clinic'),
+(6794329,'Sophie','Dunn','East-Village Medical'),
+(4538994,'Callum','Evans','Cloud Clinic'),
+(4499032,'Jake','McPhierson','Sunset Clinic'),
+(3345394,'Lauren','McDonald','Downsview Clinic'),
+(5993945,'Becky','Richardson','Sunset Clinic'),
+(5986854,'Marge','Leeson','Cloud Clinic'),
+(4938522,'Karren','Smith','Sunview Clinic'),
+(1345032,'Ruth','Longwood','Riverview Medical'),
+(3048742,'Olivia','Dunne','East-Village Medical')
+;
+
+insert into Nurse values
+(7364329,'Hope','Lundy'),
+(6344329,'Henry','Oliver'),
+(7854329,'Mia','Humphry'),
+(9674329,'Blair','Trent'),
+(8784329,'John','Oliver'),
+(1214329,'Kiara','Munn'),
+(3847292,'John','Oliver'),
+(9584736,'Robert','McTague'),
+(5874828,'James','Smith'),
+(5345328,'Mike','Lundell'),
+(6575645,'Patricia','Brown'),
+(7867862,'Jenny','Davis'),
+(4535862,'Linda','Lopez'),
+(7533479,'Susan','Miller'),
+(4334686,'Nancy','Williams'),
+(5463477,'Lisa','Johnson')
+;
+
+insert into nurseCredentials values
+(7364329,'Rn'),
+(6344329,'Rn'),
+(7854329,'Rn'),
+(9674329,'Rn'),
+(8784329,'Rn'),
+(1214329,'Rn'),
+(3847292,'Rn'),
+(9584736,'Rn'),
+(5874828,'Rn'),
+(5345328,'Rn'),
+(6575645,'Rn'),
+(7867862,'Rn'),
+(4535862,'Rn'),
+(7533479,'Rn'),
+(4334686,'Rn'),
+(5463477,'Rn')
+;
+
+insert into drCredentials values
+(9594329,'Dr'),
+(8294329,'Dr'),
+(5194329,'Dr'),
+(7294329,'Dr'),
+(4494329,'Dr'),
+(6794329,'Dr'),
+(4538994,'Dr'),
+(4499032,'Dr'),
+(3345394,'Dr'),
+(5993945,'Dr'),
+(5986854,'Dr'),
+(4938522,'Dr'),
+(1345032,'Dr'),
+(3048742,'Dr')
+;
+
+insert into shipsTo values
+('3847592374','White Oaks Clinic'),
+('4947592374','Downsview Medical'),
+('2747592374','Stumpin Medical'),
+('3447592374','Priority Medical'),
+('5647592374','All-Right Clinic'),
+('7577592374','Vally Medical'),
+('9837592374','Stumpin Medical'),
+('9337592374','Priority Medical'),
+('7217592374','Downsview Medical'),
+('5432592374','All-Right Clinic'),
+('8487592374','White Oaks Clinic'),
+('9437592374','Priority Medical'),
+('5847392374','Stumpin Medical'),
+('8236592374','Downsview Medical'),
+('4232592374','All-Right Clinic'),
+('3212592374','Vally Medical'),
+('8782592374','Vally Medical'),
+('4827592374','All-Right Clinic'),
+('5437592374','White Oaks Clinic'),
+('2567592374','Downsview Medical'),
+('4577592374','Priority Medical'),
+('7347592374','Stumpin Medical'),
+('7567592374','Priority Medical'),
+('7473958454','Vally Medical'),
+('4783958454','All-Right Clinic'),
+('4583958454','White Oaks Clinic'),
+('5763958454','Downsview Medical'),
+('2933958454','Priority Medical'),
+('8853958454','Stumpin Medical'),
+('4213958454','Priority Medical')
+;
+
+insert into Vaccination values
+('7694329','White Oaks Clinic','3847592374','2021-04-16 09:32:12'),
+('2394329','Downsview Medical','4947592374','2021-04-16 13:31:54'),
+('5894329','Stumpin Medical','2747592374','2021-04-16 15:32:12'),
+('3994329','Priority Medical','3447592374','2021-04-16 08:32:12'),
+('8394329','All-Right Clinic','5647592374','2021-04-16 23:32:12'),
+('1794329','Vally Medical','3212592374','2021-04-16 08:32:12'),
+('4538976','Priority Medical','9437592374','2021-04-16 08:32:12'),
+('6943495','Vally Medical','8782592374','2021-04-16 08:32:12'),
+('4968395','All-Right Clinic','4783958454','2021-04-16 08:32:12'),
+('5993345','Downsview Medical','5763958454','2021-04-16 08:32:12'),
+('4453004','Priority Medical','4213958454','2021-04-16 08:32:12'),
+('5929345','Downsview Medical','2567592374','2021-04-16 08:32:12'),
+('2944583','White Oaks Clinic','8487592374','2021-04-16 08:32:12'),
+('4354200','Vally Medical','7577592374','2021-04-16 08:32:12')
+;
+
+insert into DrWorksAt values
+(9594329,'White Oaks Clinic'),
+(8294329,'Downsview Medical'),
+(5194329,'Stumpin Medical'),
+(7294329,'Priority Medical'),
+(4494329,'All-Right Clinic'),
+(4538994,'Vally Medical'),
+(4499032,'All-Right Clinic'),
+(3345394,'Downsview Medical'),
+(5993945,'White Oaks Clinic'),
+(1345032,'White Oaks Clinic'),
+(5986854,'Stumpin Medical'),
+(4938522,'All-Right Clinic'),
+(3048742,'Vally Medical')
+;
+
+insert into NurseWorksAt values
+(7364329,'White Oaks Clinic'),
+(6344329,'Downsview Medical'),
+(7854329,'Stumpin Medical'),
+(9674329,'Stumpin Medical'),
+(8784329,'White Oaks Clinic'),
+(1214329,'All-Right Clinic'),
+(9584736,'White Oaks Clinic'),
+(5874828,'Vally Medical'),
+(5345328,'Priority Medical'),
+(6575645,'Stumpin Medical'),
+(7867862,'All-Right Clinic'),
+(4535862,'Downsview Medical'),
+(7533479,'Vally Medical'),
+(4334686,'Priority Medical'),
+(5463477,'White Oaks Clinic')
+;
