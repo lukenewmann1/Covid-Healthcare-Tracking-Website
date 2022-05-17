@@ -1,0 +1,7 @@
+Download and install XAMPP
+Navigate to /XAMPP/htdocs folder, and copy all files from this repository into it (excluding the 
+Start XAMPP MySQL Database and Apache Web Server on host machine
+Create a new database called CovidDB in phpMyAdmin
+Copy  contained in MAHAnimalServices_DDL.txt into the SQL query box
+Navigate to the MAH Animal Services Website
+Profit.
