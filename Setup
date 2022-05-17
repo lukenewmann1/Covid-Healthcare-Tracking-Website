@@ -1,7 +1,7 @@
 Download and install XAMPP
-Navigate to /XAMPP/htdocs folder, and copy all files from this repository into it (excluding the 
+Navigate to /XAMPP/htdocs folder, and copy all files from this repository into it (excluding the vaccineDB_Script.txt file)
 Start XAMPP MySQL Database and Apache Web Server on host machine
 Create a new database called CovidDB in phpMyAdmin
-Copy  contained in MAHAnimalServices_DDL.txt into the SQL query box
-Navigate to the MAH Animal Services Website
-Profit.
+Import the vaccineDB_Script.txt file under the SQL tab
+Navigate to the website by replacing the http://localhost:****/phpmyadmin/ with http://localhost:****/covid.html 
+The website is now availible to browse and perform it's applications.
