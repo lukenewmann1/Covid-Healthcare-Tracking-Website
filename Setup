@@ -4,4 +4,4 @@ Start XAMPP MySQL Database and Apache Web Server on host machine
 Create a new database called CovidDB in phpMyAdmin
 Import the vaccineDB_Script.txt file under the SQL tab
 Navigate to the website by replacing the http://localhost:****/phpmyadmin/ with http://localhost:****/covid.html 
-The website is now availible to browse and perform it's applications.
+The website is now availible to browse and perform it's applications
