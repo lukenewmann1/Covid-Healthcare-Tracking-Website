@@ -1,7 +1,7 @@
 # Covid-Healthcare-php/MySQL Web Application
 Author: Luke Newman | Last Updated: March.30, 2022
 
-This website was built using HTML, CSS, php and MySQL (database). The relational database contains data on vaccines, vaccine clincs, healthcare workers and patients. The web application has the following features,
+This website was built using HTML, CSS, php and MySQL (database). The relational database contains data on vaccines, vaccine clinics, healthcare workers and patients. The web application has the following features,
   
    --> Records a patient vaccination into the database. If the patient doesn't exist in the database, it will prompt the user to add them first
    
