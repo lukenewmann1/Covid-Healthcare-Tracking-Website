@@ -11,6 +11,6 @@ This website was built using HTML, CSS, PHP and MySQL (database), while it is lo
    
     - Choose a vaccine clinic and see which healthcare works are staffed their and whether they are a doctor or a nurse
 
-This web application uses a mock covid-19 healthcare relational database to to perform it's applications.
+This web application uses a mock data in database to to perform it's applications.
 This relational database is built and operated with MySQL and mariaDB.
 Setup and dependcies are outlined in the 'setup.txt' file.
